@@ -1,0 +1,23 @@
+---
+- name: TEST MANAGER
+  hosts: manager
+  remote_user: root
+
+  roles:
+     - docker_swarm
+    
+
+###  roles:
+  ###  - ( role: role-name, tags: tags-name )
+
+    #### definir les tags dans un dictionnaire de role ou dans directive "include" toutes les taches
+    ###  qui herite du tags dans dossier ((meta ))
+
+- name: TEST WORKERS
+  hosts: workers
+  remote_user: root
+
+  roles:
+   - docker_swarm
+
+...

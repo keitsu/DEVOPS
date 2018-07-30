@@ -1,0 +1,8 @@
+---
+
+- name: Install ncdu
+  apt:
+    name: ncdu
+    state: present
+    update_cache: yes
+...
