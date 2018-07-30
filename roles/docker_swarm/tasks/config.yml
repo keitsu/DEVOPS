@@ -1,4 +1,70 @@
 ---
 
+- name: Uninstall old versions of Docker
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker-engine
+    - docker.io
+
+- name: Ensure the system can use the HTTPS transport for APT
+  stat:
+    path: /usr/lib/apt/methods/https
+  register: apt_https_transport
+
+- name: Import docker GPG key to apt
+  apt_key:
+    url: "{{ docker_apt_key_url }}"
+    state: present
+
+- name: Add docker repository
+  apt_repository:
+    repo: 'deb {{ docker_apt_repository_url }}/{{ docker_distribution }} {{ docker_distribution_release }} stable'
+    state: present
+
+
+###########################################
+
+
+- name: Add docker repository preferences
+  template:
+    src: apt_docker.pref.2
+    dest: /etc/apt/preferences.d/docker.pref
+
+- name: Install docker
+  apt:
+    pkg: "{{ docker_package }}={{ docker_debian_version }}"
+    state: installed
+
+- name: Create docker.service.d directory
+  file:
+    path: "{{ docker_override_path }}"
+    state: directory
+  when: docker_override_options
+
+- name: Configure docker
+  template:
+    src: service_override.conf
+    dest: "{{ docker_override_path }}/override.conf"
+    owner: root
+    mode: 0644
+  when: docker_override_options
+  notify:
+    - reload systemd
+    - restart docker
+
+###- name: Set the stable docker repository
+###  apt_repository:
+###    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} edge"
+###    state: present
+###    update_cache: yes
+    ##update_cache: yes
+    #install_recommends=yes allow_unauthenticated=yes
+###  when: ansible_distribution == "Debian"
+###  retries: 3
+###  delay: 20
+
 
 ...
