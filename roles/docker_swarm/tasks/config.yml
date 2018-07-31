@@ -61,19 +61,36 @@
 
 - name: Clean artifact path
   file:
+    path: "{{ item }}"
     state: absent
-    path: "/usr/local/bin/docker-compose"
+  with_items:
+    - /usr/local/bin/docker-compose
+    - /usr/local/bin/docker-machine
 
-#- name: install docker compose
-#  become: yes
-#  shell: 'curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose &&
-#  chmod +x /usr/local/bin/docker-compose'
-
-
-
-- name: Install Docker Compose (if configured).
+- name: Install Docker Compose
   get_url:
     url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64
     dest: "{{ docker_compose_path }}"
     mode: 0755
+
+- name: Install Docker Machine.
+  get_url:
+    url: https://github.com/docker/machine/releases/download/{{ docker_machine_version }}/docker-machine-Linux-x86_64
+    dest: "{{ docker_machine_path }}"
+    mode: 0755
+
+- name: Install bash-completion
+  apt: name={{ item }}
+  with_items:
+   - bash-completion
+
+- name: Install Docker Machine bash_completion
+  get_url:
+    url: https://raw.githubusercontent.com/docker/machine/{{ docker_machine_version }}/contrib/completion/bash/{{ item }}
+    dest: /etc/bash_completion.d/{{ item }}
+  with_items:
+    - docker-machine-prompt.bash
+    - docker-machine-wrapper.bash
+    - docker-machine.bash
+
 ...
