@@ -9,6 +9,18 @@
     - docker-engine
     - docker.io
 
+- name: debian | installing pre-reqs
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+    - 'apt-transport-https'
+    - 'ca-certificates'
+    - 'software-properties-common'
+
+
+
 - name: Ensure the system can use the HTTPS transport for APT
   stat:
     path: /usr/lib/apt/methods/https
@@ -23,20 +35,11 @@
   apt_repository:
     repo: 'deb {{ docker_apt_repository_url }}/{{ docker_distribution }} {{ docker_distribution_release }} stable'
     state: present
-
-
-###########################################
-
-
-- name: Add docker repository preferences
-  template:
-    src: apt_docker.pref.2
-    dest: /etc/apt/preferences.d/docker.pref
-
+    
 - name: Install docker
   apt:
     pkg: "{{ docker_package }}={{ docker_debian_version }}"
-    state: installed
+    state: present
 
 - name: Create docker.service.d directory
   file:
@@ -55,16 +58,8 @@
     - reload systemd
     - restart docker
 
-###- name: Set the stable docker repository
-###  apt_repository:
-###    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} edge"
-###    state: present
-###    update_cache: yes
-    ##update_cache: yes
-    #install_recommends=yes allow_unauthenticated=yes
-###  when: ansible_distribution == "Debian"
-###  retries: 3
-###  delay: 20
+
+
 
 
 ...
