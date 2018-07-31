@@ -35,7 +35,7 @@
   apt_repository:
     repo: 'deb {{ docker_apt_repository_url }}/{{ docker_distribution }} {{ docker_distribution_release }} stable'
     state: present
-    
+
 - name: Install docker
   apt:
     pkg: "{{ docker_package }}={{ docker_debian_version }}"
@@ -59,7 +59,21 @@
     - restart docker
 
 
+- name: Clean artifact path
+  file:
+    state: absent
+    path: "/usr/local/bin/docker-compose"
+
+#- name: install docker compose
+#  become: yes
+#  shell: 'curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose &&
+#  chmod +x /usr/local/bin/docker-compose'
 
 
 
+- name: Install Docker Compose (if configured).
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64
+    dest: "{{ docker_compose_path }}"
+    mode: 0755
 ...

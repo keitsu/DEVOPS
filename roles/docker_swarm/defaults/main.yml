@@ -18,4 +18,6 @@ docker_override_options: false
 docker_override_path: /etc/systemd/system/docker.service.d
 docker_daemon_options: "-H fd://"
 
+docker_compose_version: "1.22.0"
+docker_compose_path: /usr/local/bin/docker-compose
 ...
