@@ -1,0 +1,21 @@
+---
+- name: Installing pre-reqs for Gitlab
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+    - 'openssh-server'
+    - 'ca-certificates'
+    - 'curl'
+    - 'postfix'
+    - 'tzdata'
+
+- name: "Download and execute GitLab script to set apt source"
+  shell: curl -sL "{{gitlab_script_url}}" | bash -
+
+- name: Installing gitlab
+  apt:
+    name: "gitlab-ee"
+  environment:
+    EXTERNAL_URL: "http://172.16.226.1"
