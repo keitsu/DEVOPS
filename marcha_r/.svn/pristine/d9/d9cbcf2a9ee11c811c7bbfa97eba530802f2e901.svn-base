@@ -1,5 +1,0 @@
----
-# vars file for docker_swarm
-iface: "{{ swarm_iface | default('eth0') }}"
-token: "{{ hostvars[groups['swarm_manager_operational'][0]]['swarm_worker_token']['stdout'] }}"
-...
