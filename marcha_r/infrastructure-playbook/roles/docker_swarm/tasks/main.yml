@@ -1,0 +1,7 @@
+---
+# tasks file for docker_swarm
+- include: install.yml
+
+- include: config.yml
+
+...
