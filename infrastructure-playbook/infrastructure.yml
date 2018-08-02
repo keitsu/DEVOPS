@@ -5,6 +5,7 @@
   become: yes
   roles:
      - docker_swarm
+     - docker_registry
 
 - name: TEST WORKERS
   hosts: workers

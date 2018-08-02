@@ -93,8 +93,8 @@
     - docker-machine-wrapper.bash
     - docker-machine.bash
 
-
-
+- name: LEAVE OLD SWARM ( A AMELIORER)
+  shell: 'docker swarm leave --force '
 #Mise en place du docker swarm
 - name: Creation d'un group de manager
   shell: 'docker swarm init --advertise-addr={{ swarm_iface | default("eth0") }}:2377'
