@@ -3,6 +3,6 @@
   hosts: manager
   remote_user: sitruk_m
   become: yes
-  roles: 
+  roles:
      - {role: "gitlab-install", tags: "install"}
 ...

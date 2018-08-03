@@ -1,9 +1,9 @@
 ---
 # tasks file for docker_registry
-##- name: Stop OLD Registry
-  #shell: 'docker container stop registry && docker container rm -v registry'
+#- name: Stop OLD Registry
+#  shell: 'docker service rm registry'
 
 - name: Docker Registry
-  shell: 'docker run -d -p 5000:5000 --name registry registry:2'
+  shell: 'docker service create --name registry --publish published=5000,target=5000 registry:2'
 
 ...
