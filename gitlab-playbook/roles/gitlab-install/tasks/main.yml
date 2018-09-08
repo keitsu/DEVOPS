@@ -18,4 +18,4 @@
   apt:
     name: "gitlab-ee"
   environment:
-    EXTERNAL_URL: "http://172.16.226.1"
+    EXTERNAL_URL: "http://172.16.226.14"

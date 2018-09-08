@@ -1,7 +1,7 @@
 ---
 - name: Installation de Gitlab
   hosts: manager
-  remote_user: sitruk_m
+  remote_user: thomas_s
   become: yes
   roles:
      - {role: "gitlab-install", tags: "install"}
