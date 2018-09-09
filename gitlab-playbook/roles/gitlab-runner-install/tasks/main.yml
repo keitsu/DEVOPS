@@ -1,0 +1,11 @@
+---
+# tasks file for gitlab-runner-install
+- name: "Download and execute GitLab script to set apt source"
+  shell: curl -sL "{{gitlab_script_url}}" | bash -
+
+#- name: "Pining package"
+#  shell: "cat > /etc/apt/preferences.d/pin-gitlab-runner.pref <<EOF Explanation: Prefer GitLab provided packages over the Debian native ones Package: gitlab-runner Pin: origin packages.gitlab.com Pin-Priority: 1001 EOF"
+
+- name: Installing gitlab runner
+  apt:
+    name: "gitlab-runner"
