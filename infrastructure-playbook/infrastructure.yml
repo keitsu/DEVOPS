@@ -6,6 +6,7 @@
   roles:
      - docker_swarm
      - docker_registry
+     - docker_tickstack
 
 - name: TEST WORKERS
   hosts: workers
@@ -13,5 +14,6 @@
   become: yes
   roles:
    - docker_swarm
+   - docker_tickstack
 
 ...
