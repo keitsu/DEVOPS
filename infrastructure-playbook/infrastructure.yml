@@ -1,19 +1,18 @@
 ---
 - name: TEST MANAGER
   hosts: manager
-  remote_user: thomas_s
+  remote_user: sitruk_m
   become: yes
   roles:
      - docker_swarm
      - docker_registry
-     - docker_tickstack
+     - { role: docker_tickstack, tags: [ 'docker_tickstack' ] }
 
 - name: TEST WORKERS
   hosts: workers
-  remote_user: thomas_s
+  remote_user: sitruk_m
   become: yes
   roles:
    - docker_swarm
-   - docker_tickstack
 
 ...

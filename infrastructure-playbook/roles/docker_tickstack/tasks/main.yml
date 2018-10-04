@@ -2,68 +2,45 @@
 # tasks file for docker_tickstack
 - name: Synchronization of src on the control machine to dest on the remote hosts
   synchronize:
-    src: /Users/samuel/Desktop/influxdata
-    dest: /home/thomas_s/influxdata/
+    src: tickstack/
+    dest: /home/sitruk_m/tickstack/
   when: ansible_host == '172.16.226.14'
 
-# - name: Copy content dockerfile influxdata_1
-#   copy:
-#     src: ../files/docker-compose.yml
-#     dest: /home/thomas_s/influxdata/
-#     owner: thomas_s
-#     group: thomas_s
-#     mode: 0644
-#   when: ansible_host == '172.16.226.14'
-#
-# - name: Copy content dockerfile influxdata_2
-#   copy:
-#     src: ../files/etc
-#     dest: /home/thomas_s/influxdata/
-#     owner: thomas_s
-#     group: thomas_s
-#     mode: 0644
-#   when: ansible_host == '172.16.226.14'
-
-# - name: Execute maj docker_compose
-#   shell: "cd /home/thomas_s/influxdata/; docker-compose up -d"
-#   when: ansible_host == '172.16.226.14'
-
-
-# - name: Tag chronograf to point to registry
-#   shell: 'docker tag chronograf:1.0.0-rc1 localhost:5000/chronograf'
-#   when: ansible_host == '172.16.226.14'
-#
-# - name: push chronograf to registry
-#   shell: 'docker push localhost:5000/chronograf'
-#   when: ansible_host == '172.16.226.14'
-
-
-- name: Install pip
-  apt:
-    name: python-pip
-    state: present
+- name: Build chronograf image and push it to regitry
   when: ansible_host == '172.16.226.14'
-
-# - name: installing docker-py via pip
-#   become: yes
-#   become_user: root
-#   with_items:
-#     - docker
-#   pip:
-#     name: '{{ item }}'
-#     state: present
-
-
-- name: Image Chronograf
-  docker_image:
-     path: /home/thomas_s/influxdata/influxdata/chronograf
-     state: present
-     name: chronograf
   become: yes
-
-- name: Tag and push to local registry
   docker_image:
-     name: chronograf
-     repository: localhost:5000/chronograf
-     push: yes
+    path: ./tickstack/chronograf/
+    name: 127.0.0.1:5000/chronograf
+    tag: latest
+    push: yes
+
+- name: Build influxdb image and push it to regitry
+  when: ansible_host == '172.16.226.14'
   become: yes
+  docker_image:
+    path: ./tickstack/influxdb/
+    name: 127.0.0.1:5000/influxdb
+    tag: latest
+    push: yes
+
+- name: Build kapacitor image and push it to regitry
+  when: ansible_host == '172.16.226.14'
+  become: yes
+  docker_image:
+    path: ./tickstack/kapacitor/
+    name: 127.0.0.1:5000/kapacitor
+    tag: latest
+    push: yes
+
+- name: Build telegraf image and push it to regitry
+  when: ansible_host == '172.16.226.14'
+  become: yes
+  docker_image:
+    path: ./tickstack/telegraf/
+    name: 127.0.0.1:5000/telegraf
+    tag: latest
+    push: yes
+
+- name: deploy tickstack
+  shell: 'docker stack deploy --compose-file /home/sitruk_m/tickstack/docker-compose.yml tick'
